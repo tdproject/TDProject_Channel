@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TDProject_Cannel
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/entity-1.0.0.xsd"
+	name="Maintainer" type="entity">
+    <description>This class represents an object oriented way to manipulate data in the database.</description>
+    <members>
+        <member name="maintainerId" sqlname="maintainer_id" type="Integer" initial="0"/>
+        <member name="channelPackageIdFk" sqlname="channel_package_id_fk" type="Integer" initial="0"/>
+        <member name="userIdFk" sqlname="user_id_fk" type="Integer" initial="0"/>
+        <member name="active" sqlname="active" type="Boolean" initial="null"/>
+        <member name="role" sqlname="role" type="String" initial="null"/>
+        <member name="hash" sqlname="hash" type="String" initial="null"/>
+        <member name="username" sqlname="username" type="String" initial="null"/>
+	</members>
+	<querys>
+		<query>
+			<description><![CDATA[Returns all maintainers.]]></description>
+			<method name="findAll">
+				<params/>
+			</method>
+			<result-type>ArrayList</result-type>
+			<sql>SELECT maintainer_id FROM maintainer</sql>
+		</query>
+        <query>
+            <description><![CDATA[Returns all maintainers for the passed channel package ID.]]></description>
+            <method name="findAllByChannelPackageIdFk">
+                <params>
+                    <param name="channelPackageIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT maintainer_id FROM maintainer WHERE channel_package_id_fk = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all maintainers for the passed user ID.]]></description>
+            <method name="findAllByUserIdFk">
+                <params>
+                    <param name="userIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT maintainer_id FROM maintainer WHERE user_id_fk = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all maintainers for the passed channel package and user ID.]]></description>
+            <method name="findAllByChannelPackageIdFkAndUserIdFk">
+                <params>
+                    <param name="channelPackageIdFk" type="Integer"/>
+                    <param name="userIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT maintainer_id FROM maintainer WHERE channel_package_id_fk = ? AND user_id_fk = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all maintainers for the passed channel ID.]]></description>
+            <method name="findAllByChannelIdFk">
+                <params>
+                    <param name="channelIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT t1.maintainer_id FROM maintainer t1, channel_package t2 WHERE t2.channel_id_fk = ? AND t1.channel_package_id_fk = t2.channel_package_id GROUP BY t1.user_id_fk</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns the maintainer for the passed channel package and user ID.]]></description>
+            <method name="findByChannelPackageIdFkAndUserIdFk">
+                <params>
+                    <param name="channelPackageIdFk" type="Integer"/>
+                    <param name="userIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT maintainer_id FROM maintainer WHERE channel_package_id_fk = ? AND user_id_fk = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns the maintainer for the passed hash.]]></description>
+            <method name="findByHash">
+                <params>
+                    <param name="hash" type="String"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT maintainer_id FROM maintainer WHERE hash = ?</sql>
+        </query>
+	</querys>
+	<references>
+        <reference name="maintainer-has-channel-package">
+            <method-name>ChannelPackage</method-name>
+            <multiplicity>one</multiplicity>
+            <source>
+                <entity-name>ChannelPackage</entity-name>
+            </source>
+            <target>
+                <member-name>channelPackageIdFk</member-name>
+            </target>
+        </reference>
+    </references>
+	<tables>
+		<table type="InnoDB" default-charset="utf8" collate="utf8_unicode_ci" auto-increment="1" name="maintainer">
+			<keys>
+				<pk name="maintainer_pk" field="maintainer_id"/>
+                <unique name="maintainer_uidx_01" field="hash"/>
+                <index name="maintainer_idx_01" field="channel_package_id_fk"/>
+                <index name="maintainer_idx_02" field="user_id_fk"/>
+                <fk name="maintainer_fk_01" field="channel_package_id_fk" target-table="channel_package" target-field="channel_package_id" on-delete="cascade"/>
+                <fk name="maintainer_fk_02" field="user_id_fk" target-table="user" target-field="user_id" on-delete="cascade"/>
+			</keys>	
+			<fields>
+				<field name="maintainer_id" type="int" length="10" nullable="false" autoincrement="true"/>
+                <field name="channel_package_id_fk" type="int" length="10" nullable="false"/>
+                <field name="user_id_fk" type="int" length="10" nullable="false"/>
+                <field name="active" type="tinyint" length="1" nullable="false" default="1"/>
+                <field name="role" type="enum" length="'lead','developer','contributor','helper'" nullable="true"/>
+                <field name="hash" type="varchar" length="32" nullable="false"/>
+                <field name="username" type="varchar" length="45" nullable="false"/>
+			</fields>
+		</table>
+	</tables>
+</entity>

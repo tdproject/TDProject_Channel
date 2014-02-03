@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TDProject_Cannel
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/entity-1.0.0.xsd"
+	name="ChannelPackage" type="entity">
+    <description>This class represents an object oriented way to manipulate data in the database.</description>
+    <members>
+        <member name="channelPackageId" sqlname="channel_package_id" type="Integer" initial="0"/>
+        <member name="channelIdFk" sqlname="channel_id_fk" type="Integer" initial="0"/>
+        <member name="categoryIdFk" sqlname="category_id_fk" type="Integer" initial="0"/>
+    	<member name="name" sqlname="name" type="String" initial="null"/>
+        <member name="licence" sqlname="licence" type="String" initial="null"/>
+        <member name="licenceUri" sqlname="licence_uri" type="String" initial="null"/>
+        <member name="shortDescription" sqlname="short_description" type="String" initial="null"/>
+        <member name="description" sqlname="description" type="String" initial="null"/>
+        <member name="deprecated" sqlname="deprecated" type="Boolean" initial="false"/>
+        <member name="deprecatedChannel" sqlname="deprecated_channel" type="String" initial="null"/>
+        <member name="deprecatedPackage" sqlname="deprecated_package" type="String" initial="null"/>
+	</members>
+	<querys>
+        <query>
+            <description><![CDATA[Returns the channel package with the passed name.]]></description>
+            <method name="findByName">
+                <params>
+                    <param name="name" type="String"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT channel_package_id FROM channel_package WHERE name = ?</sql>
+        </query>
+		<query>
+			<description><![CDATA[Returns all channel packages.]]></description>
+			<method name="findAll">
+				<params/>
+			</method>
+			<result-type>ArrayList</result-type>
+			<sql>SELECT channel_package_id FROM channel_package</sql>
+		</query>
+        <query>
+            <description><![CDATA[Returns all channel packages for the passed channel ID.]]></description>
+            <method name="findAllByChannelIdFk">
+                <params>
+                    <param name="channelIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT channel_package_id FROM channel_package WHERE channel_id_fk = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all channel packages for the passed category ID.]]></description>
+            <method name="findAllByCategoryIdFk">
+                <params>
+                    <param name="categoryIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT channel_package_id FROM channel_package WHERE category_id_fk = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all channel packages for the passed category ID.]]></description>
+            <method name="findAllByChannelIdFkAndCategoryIdFk">
+                <params>
+                    <param name="channelIdFk" type="Integer"/>
+                    <param name="categoryIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT channel_package_id FROM channel_package WHERE channel_id_fk = ? AND category_id_fk = ?</sql>
+        </query>
+	</querys>
+	<references>
+        <reference name="channel-package-has-channel">
+            <method-name>Channel</method-name>
+            <multiplicity>one</multiplicity>
+            <source>
+                <entity-name>Channel</entity-name>
+            </source>
+            <target>
+                <member-name>channelIdFk</member-name>
+            </target>
+        </reference>
+        <reference name="channel-package-has-category">
+            <method-name>Category</method-name>
+            <multiplicity>one</multiplicity>
+            <source>
+                <entity-name>Category</entity-name>
+            </source>
+            <target>
+                <member-name>categoryIdFk</member-name>
+            </target>
+        </reference>
+        <reference name="channel-package-has-maintainers">
+            <method-name>Maintainers</method-name>
+            <multiplicity>many</multiplicity>
+            <source>
+                <entity-name>Maintainer</entity-name>
+            </source>
+            <target>
+                <member-name>channelPackageId</member-name>
+            </target>
+        </reference>
+        <reference name="channel-package-has-releases">
+            <method-name>Releases</method-name>
+            <multiplicity>many</multiplicity>
+            <source>
+                <entity-name>Release</entity-name>
+            </source>
+            <target>
+                <member-name>channelPackageId</member-name>
+            </target>
+        </reference>
+	</references>
+	<tables>
+		<table type="InnoDB" default-charset="utf8" collate="utf8_unicode_ci" auto-increment="1" name="channel_package">
+			<keys>
+				<pk name="channel_package_pk" field="channel_package_id"/>
+                <unique name="channel_package_uidx_01" field="name"/>
+                <index name="channel_package_idx_01" field="channel_id_fk"/>
+                <index name="channel_package_idx_02" field="category_id_fk"/>
+                <fk name="channel_package_fk_01" field="channel_id_fk" target-table="channel" target-field="channel_id" on-delete="cascade"/>
+                <fk name="channel_package_fk_02" field="category_id_fk" target-table="category" target-field="category_id" on-delete="cascade"/>
+			</keys>	
+			<fields>
+				<field name="channel_package_id" type="int" length="10" nullable="false" autoincrement="true"/>
+                <field name="channel_id_fk" type="int" length="10" nullable="false"/>
+                <field name="category_id_fk" type="int" length="10" nullable="false"/>
+				<field name="name" type="varchar" length="255" nullable="false"/>
+                <field name="licence" type="varchar" length="25" nullable="false"/>
+                <field name="licence_uri" type="varchar" length="255" nullable="false"/>
+                <field name="short_description" type="varchar" length="255" nullable="true"/>
+                <field name="description" type="text" length="16" nullable="true"/>
+                <field name="deprecated" type="tinyint" length="1" nullable="false" default="0"/>
+                <field name="deprecated_channel" type="varchar" length="255" nullable="true"/>
+                <field name="deprecated_package" type="varchar" length="255" nullable="true"/>
+			</fields>
+		</table>
+	</tables>
+</entity>

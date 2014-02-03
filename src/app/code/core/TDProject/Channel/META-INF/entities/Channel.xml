@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TDProject_Channel
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/entity-1.0.0.xsd"
+	name="Channel" type="entity">
+    <description>This class represents an object oriented way to manipulate data in the database.</description>
+    <members>
+        <member name="channelId" sqlname="channel_id" type="Integer" initial="0"/>
+    	<member name="name" sqlname="name" type="String" initial="null"/>
+        <member name="alias" sqlname="alias" type="String" initial="null"/>
+        <member name="summary" sqlname="summary" type="String" initial="null"/>
+        <member name="createPackage" sqlname="create_package" type="Boolean" initial="false"/>
+        <member name="allowedNetworks" sqlname="allowed_networks" type="String" initial="null"/>
+        <member name="allowedIps" sqlname="allowed_ips" type="String" initial="null"/>
+	</members>
+	<querys>
+		<query>
+			<description><![CDATA[Returns all channels.]]></description>
+			<method name="findAll">
+				<params/>
+			</method>
+			<result-type>ArrayList</result-type>
+			<sql>SELECT channel_id FROM channel</sql>
+		</query>
+		<query>
+			<description><![CDATA[Returns the channel with the passed alias.]]></description>
+			<method name="findByAlias">
+				<params>
+                    <param name="alias" type="String"/>
+				</params>
+			</method>
+			<result-type>Storable</result-type>
+			<sql>SELECT channel_id FROM channel WHERE alias = ?</sql>
+		</query>
+        <query>
+            <description><![CDATA[Returns the channels with the passed name.]]></description>
+            <method name="findAllByName">
+                <params>
+                    <param name="name" type="String"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT channel_id FROM channel WHERE name = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns the channels with the passed alias.]]></description>
+            <method name="findAllByAlias">
+                <params>
+                    <param name="alias" type="String"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT channel_id FROM channel WHERE alias = ?</sql>
+        </query>
+	</querys>
+	<references>
+        <reference name="channel-has-channel-packages">
+            <method-name>ChannelPackages</method-name>
+            <multiplicity>many</multiplicity>
+            <source>
+                <entity-name>ChannelPackage</entity-name>
+            </source>
+            <target>
+                <member-name>channelId</member-name>
+            </target>
+        </reference>
+        <reference name="channel-has-maintainers">
+            <method-name>Maintainers</method-name>
+            <multiplicity>many</multiplicity>
+            <source>
+                <entity-name>Maintainer</entity-name>
+            </source>
+            <target>
+                <member-name>channelId</member-name>
+            </target>
+        </reference>
+        <reference name="channel-has-categories">
+            <method-name>Categories</method-name>
+            <multiplicity>many</multiplicity>
+            <source>
+                <entity-name>Category</entity-name>
+            </source>
+            <target>
+                <member-name>channelId</member-name>
+            </target>
+        </reference>
+	</references>
+	<tables>
+		<table type="InnoDB" default-charset="utf8" collate="utf8_unicode_ci" auto-increment="1" name="channel">
+			<keys>
+				<pk name="channel_pk" field="channel_id"/>
+                <unique name="channel_uidx_01" field="alias"/>
+                <unique name="channel_uidx_02" field="name"/>
+			</keys>	
+			<fields>
+				<field name="channel_id" type="int" length="10" nullable="false" autoincrement="true"/>
+				<field name="name" type="varchar" length="255" nullable="false"/>
+                <field name="alias" type="varchar" length="25" nullable="false"/>
+                <field name="summary" type="text" length="16" nullable="true"/>
+                <field name="create_package" type="tinyint" length="1" nullable="false" default="0"/>
+                <field name="allowed_networks" type="varchar" length="255" nullable="false"/>
+                <field name="allowed_ips" type="varchar" length="255" nullable="false"/>
+			</fields>
+		</table>
+	</tables>
+</entity>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pointcuts>
+    <pointcut>
+        <includeFile>TDProject/Channel/Aspect/Authorization/Ip/Hash.php</includeFile>
+        <className>TDProject_Channel_Aspect_Authorization_Ip_Hash</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_Channel_Api->uploadAction(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Channel/Aspect/Authorization/Ip.php</includeFile>
+        <className>TDProject_Channel_Aspect_Authorization_Ip</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_Channel_Api->__defaultAction(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Channel/Aspect/Authorization/Ip.php</includeFile>
+        <className>TDProject_Channel_Aspect_Authorization_Ip</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_Channel_Api->downloadAction(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Core/Aspect/Authorization/Acl.php</includeFile>
+        <className>TDProject_Core_Aspect_Authorization_Acl</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_Category->.*Action(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Core/Aspect/Authorization/Acl.php</includeFile>
+        <className>TDProject_Core_Aspect_Authorization_Acl</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_Channel->.*Action(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Core/Aspect/Authorization/Acl.php</includeFile>
+        <className>TDProject_Core_Aspect_Authorization_Acl</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_ChannelPackage->.*Action(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Core/Aspect/Authorization/Acl.php</includeFile>
+        <className>TDProject_Core_Aspect_Authorization_Acl</className>
+        <methodToIntercept>public.* TDProject_Channel_Controller_Release->.*Action(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>forceAuthorization</interceptWithMethod>
+    </pointcut>
+    <pointcut>
+        <includeFile>TDProject/Channel/Aspect/Core/Controller/Router/Resource.php</includeFile>
+        <className>TDProject_Channel_Aspect_Core_Controller_Router_Resource</className>
+        <methodToIntercept>public.* TDProject_Core_Controller_Router.*->setSource.*(.*)</methodToIntercept>
+        <advice>around</advice>
+        <interceptWithMethod>setSource</interceptWithMethod>
+    </pointcut>
+</pointcuts>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+/**
+ * TDProject_Core
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<processor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/session-1.0.0.xsd"
+	name="DomainProcessor" type="session" default-application="channel"
+	deployment-descriptor="TDProject/META-INF/deployment-descriptor.xml">
+	<description>This class represents an object oriented way to manipulate data in the database.</description>
+	<methods>	
+		<method name="getChannelViewData" type="abstract">
+			<description><![CDATA[This method returns the channel with the ID passed as parameter.]]></description>
+			<params>
+				<param name="channelId" type="TechDivision_Lang_Integer" default="null">
+					<description><![CDATA[Holds the ID of the channel to load the data for]]></description>
+				</param>
+			</params>
+			<return type="TDProject_Channel_Common_ValueObjects_ChannelValue">
+				<description><![CDATA[Returns a DTO initialized with the data of the requested channel.]]></description>
+			</return>
+		</method>
+		<method name="getChannelOverviewData" type="abstract">
+            <description><![CDATA[This method returns all channels.]]></description>
+            <params/>
+            <return type="TechDivision_Collections_ArrayList">
+                <description><![CDATA[Returns a ArrayList with all channels.]]></description>
+            </return>
+        </method>
+		<method name="saveChannel" type="abstract">
+			<description><![CDATA[This method saves the passed channel.]]></description>
+			<params>
+				<param name="lvo" type="TDProject_Channel_Common_ValueObjects_ChannelLightValue">
+					<description><![CDATA[Holds the LVO with the channel data]]></description>
+				</param>
+			</params>
+			<return type="TechDivision_Lang_Integer">
+				<description><![CDATA[Returns the ID of the channel.]]></description>
+			</return>
+		</method>
+		<method name="deleteChannel" type="abstract">
+            <description><![CDATA[This method deletes the channel with the ID passed as parameter.]]></description>
+            <params>
+                <param name="channelId" type="TechDivision_Lang_Integer">
+                    <description><![CDATA[Holds the ID of the channel to delete]]></description>
+                </param>
+            </params>
+            <return type="void">
+                <description><![CDATA[Returns nothing.]]></description>
+            </return>
+        </method>
+		<method name="getCategoryViewData" type="abstract">
+			<description><![CDATA[This method returns the category with the ID passed as parameter.]]></description>
+			<params>
+				<param name="categoryId" type="TechDivision_Lang_Integer" default="null">
+					<description><![CDATA[Holds the ID of the category to load the data for]]></description>
+				</param>
+			</params>
+			<return type="TDProject_Channel_Common_ValueObjects_CategoryValue">
+				<description><![CDATA[Returns a DTO initialized with the data of the requested category.]]></description>
+			</return>
+		</method>
+		<method name="getCategoryOverviewData" type="abstract">
+            <description><![CDATA[This method returns all categories.]]></description>
+            <params/>
+            <return type="TechDivision_Collections_ArrayList">
+                <description><![CDATA[Returns a ArrayList with all categories.]]></description>
+            </return>
+        </method>
+		<method name="saveCategory" type="abstract">
+			<description><![CDATA[This method saves the passed category.]]></description>
+			<params>
+				<param name="lvo" type="TDProject_Channel_Common_ValueObjects_CategoryLightValue">
+					<description><![CDATA[Holds the LVO with the category data]]></description>
+				</param>
+			</params>
+			<return type="TechDivision_Lang_Integer">
+				<description><![CDATA[Returns the ID of the category.]]></description>
+			</return>
+		</method>
+		<method name="deleteCategory" type="abstract">
+            <description><![CDATA[This method deletes the category with the ID passed as parameter.]]></description>
+            <params>
+                <param name="categoryId" type="TechDivision_Lang_Integer">
+                    <description><![CDATA[Holds the ID of the category to delete]]></description>
+                </param>
+            </params>
+            <return type="void">
+                <description><![CDATA[Returns nothing.]]></description>
+            </return>
+        </method>
+		<method name="getChannelPackageViewData" type="abstract">
+			<description><![CDATA[This method returns the channel package with the ID passed as parameter.]]></description>
+			<params>
+				<param name="channelPackageId" type="TechDivision_Lang_Integer" default="null">
+					<description><![CDATA[Holds the ID of the channel package to load the data for]]></description>
+				</param>
+			</params>
+			<return type="TDProject_Channel_Common_ValueObjects_ChannelPackageViewData">
+				<description><![CDATA[Returns a DTO initialized with the data of the requested channel package.]]></description>
+			</return>
+		</method>
+		<method name="getChannelPackageOverviewData" type="abstract">
+            <description><![CDATA[This method returns all channel packages.]]></description>
+            <params/>
+            <return type="TechDivision_Collections_ArrayList">
+                <description><![CDATA[Returns a ArrayList with all channel packages.]]></description>
+            </return>
+        </method>
+		<method name="saveChannelPackage" type="abstract">
+			<description><![CDATA[This method saves the passed channel package.]]></description>
+			<params>
+				<param name="lvo" type="TDProject_Channel_Common_ValueObjects_ChannelPackageLightValue">
+					<description><![CDATA[Holds the LVO with the channel package data]]></description>
+				</param>
+			</params>
+			<return type="TechDivision_Lang_Integer">
+				<description><![CDATA[Returns the ID of the channel package.]]></description>
+			</return>
+		</method>
+		<method name="deleteChannelPackage" type="abstract">
+            <description><![CDATA[This method deletes the channel package with the ID passed as parameter.]]></description>
+            <params>
+                <param name="channelPackageId" type="TechDivision_Lang_Integer">
+                    <description><![CDATA[Holds the ID of the channel package to delete]]></description>
+                </param>
+            </params>
+            <return type="void">
+                <description><![CDATA[Returns nothing.]]></description>
+            </return>
+        </method>
+		<method name="getResourceViewData" type="abstract">
+			<description><![CDATA[This method returns the resource as Text/XML for the channel with the ID passed as parameter.]]></description>
+			<params>
+                <param name="baseUrl" type="TechDivision_Lang_String">
+                    <description><![CDATA[Holds the base URL]]></description>
+                </param>
+				<param name="channelId" type="TechDivision_Lang_Integer">
+					<description><![CDATA[Holds the ID of the channel to load the resource for]]></description>
+				</param>
+                <param name="resourceUri" type="TechDivision_Lang_String">
+                    <description><![CDATA[Holds the requested resource URI]]></description>
+                </param>
+			</params>
+			<return type="TDProject_Channel_Common_ValueObjects_ResourceViewData">
+				<description><![CDATA[Contains the requested resource.]]></description>
+			</return>
+		</method>
+		<method name="getChannelViewDataByAlias" type="abstract">
+			<description><![CDATA[This method returns the channel with the passed alias.]]></description>
+			<params>
+                <param name="alias" type="TechDivision_Lang_String">
+					<description><![CDATA[Holds the alias of the channel to load]]></description>
+				</param>
+			</params>
+			<return type="TDProject_Channel_Common_ValueObjects_ChannelLightValue">
+				<description><![CDATA[Contains the requested channel LVO.]]></description>
+			</return>
+		</method>
+		<method name="deleteRelease" type="abstract">
+            <description><![CDATA[This method deletes the release with the ID passed as parameter.]]></description>
+            <params>
+                <param name="releaseId" type="TechDivision_Lang_Integer">
+                    <description><![CDATA[Holds the ID of the release to delete]]></description>
+                </param>
+            </params>
+            <return type="TechDivision_Lang_Integer">
+                <description><![CDATA[Returns the package ID of the deleted release.]]></description>
+            </return>
+        </method>
+		<method name="createBinaryRelease" type="abstract">
+			<description><![CDATA[This method creates a binary release from the uploaded package file.]]></description>
+			<params>
+				<param name="channelId" type="TechDivision_Lang_Integer">
+					<description><![CDATA[The ID of the channel to upload the binary for]]></description>
+				</param>
+				<param name="targetFilename" type="TechDivision_Lang_String">
+					<description><![CDATA[The path to the uploaded package file]]></description>
+				</param>
+			</params>
+			<return type="TechDivision_Lang_Integer">
+				<description><![CDATA[Returns the ID of the release.]]></description>
+			</return>
+		</method>
+		<method name="getDownloadUrl" type="abstract">
+			<description><![CDATA[This method returns the download URL for the passed filename.]]></description>
+			<params>
+				<param name="channelId" type="TechDivision_Lang_Integer">
+					<description><![CDATA[The ID of the channel to download the binary for]]></description>
+				</param>
+				<param name="filename" type="TechDivision_Lang_String">
+					<description><![CDATA[Name of the file to download]]></description>
+				</param>
+			</params>
+			<return type="TechDivision_Lang_Integer">
+				<description><![CDATA[Returns the path to download the requested file.]]></description>
+			</return>
+		</method>
+		<method name="relateMaintainer" type="abstract">
+			<description><![CDATA[This method saves the passed maintainer relation.]]></description>
+			<params>
+				<param name="lvo" type="TDProject_Channel_Common_ValueObjects_MaintainerLightValue">
+					<description><![CDATA[The LVO with the maintainer relation to save]]></description>
+				</param>
+			</params>
+			<return type="void">
+				<description><![CDATA[Returns nothing.]]></description>
+			</return>
+		</method>
+		<method name="unrelateMaintainer" type="abstract">
+			<description><![CDATA[This method removes the passed maintainer relation.]]></description>
+			<params>
+				<param name="lvo" type="TDProject_Channel_Common_ValueObjects_MaintainerLightValue">
+					<description><![CDATA[The LVO with the maintainer relation to save]]></description>
+				</param>
+			</params>
+			<return type="void">
+				<description><![CDATA[Returns nothing.]]></description>
+			</return>
+		</method>
+        <method name="allowReleaseUpload" type="abstract">
+            <description><![CDATA[This method returns TRUE if the upload is possible.]]></description>
+            <params>
+                <param name="filename" type="TechDivision_Lang_String">
+                    <description><![CDATA[Name of the file to download]]></description>
+                </param>
+                <param name="hash" type="TechDivision_Lang_String">
+                    <description><![CDATA[The API-Hash of the user who wants to upload the file with the passed name]]></description>
+                </param>
+            </params>
+            <return type="boolean">
+                <description><![CDATA[TRUE if the upload is allowed, else FALSE.]]></description>
+            </return>
+        </method>
+	</methods>
+</processor>

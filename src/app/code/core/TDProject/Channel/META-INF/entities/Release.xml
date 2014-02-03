@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TDProject_Cannel
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/entity-1.0.0.xsd"
+	name="Release" type="entity">
+    <description>This class represents an object oriented way to manipulate data in the database.</description>
+    <members>
+        <member name="releaseId" sqlname="release_id" type="Integer" initial="0"/>
+        <member name="channelPackageIdFk" sqlname="channel_package_id_fk" type="Integer" initial="0"/>
+        <member name="version" sqlname="version" type="String" initial="null"/>
+        <member name="stability" sqlname="stability" type="String" initial="null"/>
+        <member name="dependencies" sqlname="dependencies" type="String" initial="null"/>
+        <member name="packageFile" sqlname="package_file" type="String" initial="null"/>        
+        <member name="packageSize" sqlname="package_size" type="Integer" initial="null"/>
+        <member name="licence" sqlname="licence" type="String" initial="null"/>
+        <member name="licenceUri" sqlname="licence_uri" type="String" initial="null"/>
+        <member name="shortDescription" sqlname="short_description" type="String" initial="null"/>
+        <member name="description" sqlname="description" type="String" initial="null"/>
+        <member name="releaseDate" sqlname="release_date" type="Integer" initial="null"/>
+        <member name="notes" sqlname="notes" type="String" initial="null"/>
+	</members>
+	<querys>
+		<query>
+			<description><![CDATA[Returns all release.]]></description>
+			<method name="findAll">
+				<params/>
+			</method>
+			<result-type>ArrayList</result-type>
+			<sql>SELECT release_id FROM release</sql>
+		</query>
+        <query>
+            <description><![CDATA[Returns all releasees for the passed channel package ID.]]></description>
+            <method name="findAllByChannelPackageIdFk">
+                <params>
+                    <param name="channelPackageIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT `release_id` FROM `release` WHERE `channel_package_id_fk` = ? ORDER BY version DESC</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all releasees for the passed channel package ID and stability.]]></description>
+            <method name="findAllByChannelPackageIdFkAndStability">
+                <params>
+                    <param name="channelPackageIdFk" type="Integer"/>
+                    <param name="stability" type="String"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT `release_id` FROM `release` WHERE `channel_package_id_fk` = ? AND `stability` = ? ORDER BY `version` DESC</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns the release for the passed package name and version.]]></description>
+            <method name="findByChannelPackageNameAndVersion">
+                <params>
+                    <param name="channelPackageName" type="String"/>
+                    <param name="version" type="String"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT t1.`release_id` FROM `release` t1, `channel_package` t2 WHERE t2.`name` = ? AND t1.`channel_package_id_fk` = t2.`channel_package_id` AND t1.`version` = ?</sql>
+        </query>
+	</querys>
+	<references>
+        <reference name="release-has-channel-package">
+            <method-name>ChannelPackage</method-name>
+            <multiplicity>one</multiplicity>
+            <source>
+                <entity-name>ChannelPackage</entity-name>
+            </source>
+            <target>
+                <member-name>channelPackageIdFk</member-name>
+            </target>
+        </reference>
+    </references>
+	<tables>
+		<table type="InnoDB" default-charset="utf8" collate="utf8_unicode_ci" auto-increment="1" name="release">
+			<keys>
+				<pk name="release_pk" field="release_id"/>
+                <index name="release_idx_01" field="channel_package_id_fk"/>
+                <fk name="release_fk_01" field="channel_package_id_fk" target-table="channel_package" target-field="channel_package_id" on-delete="cascade"/>
+			</keys>	
+			<fields>
+				<field name="release_id" type="int" length="10" nullable="false" autoincrement="true"/>
+                <field name="channel_package_id_fk" type="int" length="10" nullable="false"/>
+                <field name="version" type="varchar" length="45" nullable="false"/>
+                <field name="stability" type="enum" length="'snapshot','devel','alpha','beta','stable'" nullable="false"/>
+                <field name="dependencies" type="text" length="16" nullable="true"/>
+                <field name="package_file" type="text" length="16" nullable="true"/>                
+                <field name="package_size" type="int" length="10" nullable="true"/>
+                <field name="licence" type="varchar" length="25" nullable="false"/>
+                <field name="licence_uri" type="varchar" length="255" nullable="true"/>
+                <field name="short_description" type="varchar" length="255" nullable="true"/>
+                <field name="description" type="text" length="16" nullable="true"/>
+                <field name="release_date" type="int" length="10" nullable="false"/>
+                <field name="notes" type="text" length="16" nullable="true"/>
+			</fields>
+		</table>
+	</tables>
+</entity>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TDProject_Channel
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/entity-1.0.0.xsd"
+	name="Category" type="entity">
+    <description>This class represents an object oriented way to manipulate data in the database.</description>
+    <members>
+        <member name="categoryId" sqlname="category_id" type="Integer" initial="0"/>
+    	<member name="name" sqlname="name" type="String" initial="null"/>
+        <member name="alias" sqlname="alias" type="String" initial="null"/>
+        <member name="description" sqlname="description" type="String" initial="null"/>
+	</members>
+	<querys>
+		<query>
+			<description><![CDATA[Returns all categories.]]></description>
+			<method name="findAll">
+				<params/>
+			</method>
+			<result-type>ArrayList</result-type>
+			<sql>SELECT category_id FROM category</sql>
+		</query>
+        <query>
+            <description><![CDATA[Returns the category with the passed name.]]></description>
+            <method name="findAllByName">
+                <params>
+                    <param name="name" type="String"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT category_id FROM category WHERE name = ?</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns all categories for the passed channel ID.]]></description>
+            <method name="findAllByChannelIdFk">
+                <params>
+                    <param name="channelIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>ArrayList</result-type>
+            <sql>SELECT t1.category_id FROM category t1, channel_package t2 WHERE t2.channel_id_fk = ? AND t1.category_id = t2.category_id_fk GROUP BY t1.category_id</sql>
+        </query>
+        <query>
+            <description><![CDATA[Returns the category with the passed name.]]></description>
+            <method name="findByName">
+                <params>
+                    <param name="name" type="String"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT category_id FROM category WHERE name = ?</sql>
+        </query>
+	</querys>
+	<references>
+        <reference name="category-has-channel-packages">
+            <method-name>ChannelPackages</method-name>
+            <multiplicity>many</multiplicity>
+            <source>
+                <entity-name>ChannelPackage</entity-name>
+            </source>
+            <target>
+                <member-name>categoryId</member-name>
+            </target>
+        </reference>
+    </references>
+	<tables>
+		<table type="InnoDB" default-charset="utf8" collate="utf8_unicode_ci" auto-increment="1" name="category">
+			<keys>
+				<pk name="category_pk" field="category_id"/>
+                <unique name="category_uidx_01" field="name"/>
+			</keys>	
+			<fields>
+				<field name="category_id" type="int" length="10" nullable="false" autoincrement="true"/>
+				<field name="name" type="varchar" length="255" nullable="false"/>
+                <field name="alias" type="varchar" length="25" nullable="false"/>
+                <field name="description" type="text" length="16" nullable="true"/>
+			</fields>
+			<initial-data>
+				<rows>
+					<row>
+						<col name="category_id">1</col>
+						<col name="name">Default</col>
+                        <col name="alias">default</col>
+                        <col name="description">Default Category</col>
+					</row>
+				</rows>
+			</initial-data>
+		</table>
+	</tables>
+</entity>

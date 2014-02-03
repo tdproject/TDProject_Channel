@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<observers>
+    <!-- observer>
+        <observerType>TDProject_Event_Observer_Action</observerType>
+        <eventName>/pre/dispatch/router/__default</eventName>
+        <callbackClassName>TDProject_Channel_Observer_Controller_Router</callbackClassName>
+        <callbackMethodName>preDispatchDefault</callbackMethodName>
+    </observer -->
+</observers>

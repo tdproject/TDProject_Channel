@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TDProject
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+-->
+<struts-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.techdivision.com/schema/struts-config-2.1.1.xsd">
+    <message-resources key="Channel" name="Application" path="TDProject/Channel/WEB-INF"/>
+    <form-beans>
+        <form-bean include="TDProject/Channel/Block/Channel/View.php" name="channelForm" type="TDProject_Channel_Block_Channel_View"/>
+        <form-bean include="TDProject/Channel/Block/Channel/Overview.php" name="channelOverviewForm" type="TDProject_Channel_Block_Channel_Overview"/>
+        <form-bean include="TDProject/Channel/Block/Category/View.php" name="categoryForm" type="TDProject_Channel_Block_Category_View"/>
+        <form-bean include="TDProject/Channel/Block/Category/Overview.php" name="categoryOverviewForm" type="TDProject_Channel_Block_Category_Overview"/>
+        <form-bean include="TDProject/Channel/Block/ChannelPackage/View.php" name="channelPackageForm" type="TDProject_Channel_Block_ChannelPackage_View"/>
+        <form-bean include="TDProject/Channel/Block/ChannelPackage/Overview.php" name="channelPackageOverviewForm" type="TDProject_Channel_Block_ChannelPackage_Overview"/>
+    </form-beans>    
+    <global-forwards/>
+    <action-mappings>
+        <action path="/channel/release/upload" name="" type="TDProject_Channel_Controller_Channel_Release_Upload" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/Channel/Release/Upload.php" unknown="false">
+            <forward name="Upload" path="TDProject_Channel_Block_Channel_Release_Upload" redirect="false"/>
+        </action>
+        <action path="/channel/api" name="" type="TDProject_Channel_Controller_Channel_Api" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/Channel/Api.php" unknown="false">
+            <forward name="Resource" path="TDProject_Channel_Block_Resource" redirect="false"/>
+            <forward name="Upload" path="TDProject_Channel_Block_Channel_Api_Upload" redirect="false"/>
+            <forward name="Download" path="TDProject_Channel_Block_Channel_Api_Download" redirect="false"/>
+        </action>
+        <action path="/channel" name="channelForm" type="TDProject_Channel_Controller_Channel" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/Channel.php" unknown="false">
+            <forward name="ChannelView" path="TDProject_Channel_Block_Channel_View" redirect="false"/>
+            <forward name="ChannelOverview" path="TDProject_Channel_Block_Channel_Overview" redirect="false"/>
+        </action>
+        <action path="/category" name="categoryForm" type="TDProject_Channel_Controller_Category" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/Category.php" unknown="false">
+            <forward name="CategoryView" path="TDProject_Channel_Block_Category_View" redirect="false"/>
+            <forward name="CategoryOverview" path="TDProject_Channel_Block_Category_Overview" redirect="false"/>
+        </action>
+        <action path="/channelPackage" name="channelPackageForm" type="TDProject_Channel_Controller_ChannelPackage" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/ChannelPackage.php" unknown="false">
+            <forward name="ChannelPackageView" path="TDProject_Channel_Block_ChannelPackage_View" redirect="false"/>
+            <forward name="ChannelPackageOverview" path="TDProject_Channel_Block_ChannelPackage_Overview" redirect="false"/>
+        </action>
+        <action path="/channelPackage/ajax" name="" type="TDProject_Channel_Controller_ChannelPackage_Ajax" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/ChannelPackage/Ajax.php" unknown="false"/>
+        <action path="/release" name="" type="TDProject_Channel_Controller_Release" scope="request" input="" parameter="method" validate="false" include="TDProject/Channel/Controller/Release.php" unknown="false"/>
+    </action-mappings>
+</struts-config>

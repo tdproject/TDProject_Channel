@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/** 
+ * TDProject_Channel
+ * 
+ * NOTICE OF LICENSE 
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0) 
+ * that is available through the world-wide-web at this URL: 
+ * http://opensource.org/licenses/osl-3.0.php 
+ */ 
+-->
+<serializers>
+	<serializer>
+	    <serializerType>TDProject_Channel_Model_Serializer_Channel</serializerType>
+	</serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_ChannelPackage_Packages</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_ChannelPackage_Maintainers</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_ChannelPackage_Info</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Maintainer_AllMaintainers</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Maintainer_Info</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Category_Categories</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Category_Info</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Category_Packages</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Category_PackagesInfo</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_AllReleases</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Package</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Version</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Devel</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Alpha</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Beta</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Stable</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Latest</serializerType>
+    </serializer>
+    <serializer>
+        <serializerType>TDProject_Channel_Model_Serializer_Release_Deps</serializerType>
+    </serializer>
+</serializers>

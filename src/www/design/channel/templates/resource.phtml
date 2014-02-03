@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * TDProject_Webservice
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ */
+
+$resource = $this->getRequest()
+    ->getAttribute(TDProject_Channel_Controller_Util_WebRequestKeys::RESOURCE);
+
+// set content type
+header('Content-type: ' . $resource->getContentType());
+
+// set the content length (IMPORTANT to avoid Header 'Transfer-Encoding: chunked')
+header('Content-Length: ' . $resource->getContentLength());
+
+// set the content to be delivered inline
+header('Content-Disposition: inline');
+
+// load the data from the Request and render it as XML content
+echo $resource->getContent();
