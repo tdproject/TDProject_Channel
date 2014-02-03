@@ -48,8 +48,8 @@ class TDProject_Channel_Controller_Util_Helper
     {
         // load the request
         $request = $this->getAction()->getApp()->getRequest();
-        // load the redirect URL
-        $redirectUrl = $request->getRedirectUrl();
+        // load the request URI
+        $requestURI = $request->getRequestURI();
         // load the channel ID
         $channelId = $request->getParameter(
             TDProject_Channel_Controller_Util_WebRequestKeys::CHANNEL_ID,
@@ -59,7 +59,7 @@ class TDProject_Channel_Controller_Util_Helper
         $baseUrl = $this->getAction()->getApp()->getBaseUrl();
         $baseUrl .= $this->getActionPath() . '/channelId/' . $channelId;
         // strip the base URL from the redirect URL = resource URI
-        $resourceUri = str_replace($baseUrl, '', $redirectUrl);
+        $resourceUri = str_replace($baseUrl, '', $requestURI);
         // return the resource URI
         return new TechDivision_Lang_String($resourceUri);
     }
