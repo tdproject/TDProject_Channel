@@ -38,12 +38,12 @@
             </package>
             <package>
                 <name>TDProject_Core</name>
-                <channel>project.tdintern.de/tdproject</channel>
+                <channel>pear.appserver.io/tdproject</channel>
                 <min>0.6.9</min>
             </package>
             <package>
                 <name>PEAR_Installer_Role</name>
-                <channel>connect.techdivision.com</channel>
+                <channel>pear.appserver.io/library</channel>
                 <min>0.0.1</min>
             </package>
             <package>
