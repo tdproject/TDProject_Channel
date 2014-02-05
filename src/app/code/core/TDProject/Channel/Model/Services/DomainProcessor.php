@@ -422,8 +422,8 @@ class TDProject_Channel_Model_Services_DomainProcessor
     		$release->delete();
     		// commit the transcation
     		$this->commitTransaction();
-    		// return the package ID of the deleted release
-    		return $release->getPackageIdFk();
+    		// return the channel package ID of the deleted release
+    		return $release->getChannelPackageIdFk();
     	}
     	catch(TechDivision_Model_Interfaces_Exception $e) {
             // rollback the transaction

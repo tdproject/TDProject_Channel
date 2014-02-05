@@ -38,7 +38,7 @@ class TDProject_Channel_Controller_Release
                 FILTER_VALIDATE_INT
             );
             // delete the release and return the package ID
-            $packageId = $this->_getDelegate()->deleteRelease(
+            $channelPackageId = $this->_getDelegate()->deleteRelease(
                 TechDivision_Lang_Integer::valueOf(
                     new TechDivision_Lang_String($releaseId)
                 )
@@ -46,9 +46,10 @@ class TDProject_Channel_Controller_Release
             // create the URL for the forward
             $url = $this->getUrl(
             	array(
-            		'path' => '/package',
+            		'path' => '/channelPackage',
             		'method' => 'edit',
-            		'packageId' => $packageId->intValue()
+            		TDProject_Channel_Controller_Util_WebRequestKeys::CHANNEL_PACKAGE_ID => 
+            	       $channelPackageId->intValue()
             	)
             );
         }
