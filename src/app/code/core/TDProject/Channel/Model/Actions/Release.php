@@ -123,60 +123,60 @@ class TDProject_Channel_Model_Actions_Release
      * 		Is thrown if a release with package name and version is already available
      */
     public function createBinaryRelease(
-    	TechDivision_Lang_Integer $channelId,
-    	TechDivision_Lang_String $targetFilename)
+        TechDivision_Lang_Integer $channelId,
+        TechDivision_Lang_String $targetFilename)
     {
-       	// initialize the archive
-       	$tar = $this->extractBinary($targetFilename);
-       	// extract the XML content of the package.xml/package2.xml file
-       	for ($i = 0; $i < sizeof($this->_metafiles); $i++) {
-       		// load the next metafile name
-       		$packageFilename = $this->_metafiles[$i];
-       		// try to load the content of the binary's metafile
-	       	if ($contents = $this->extractMetadata($tar, $packageFilename)) {
-	       		break;
-	       	}
-       	}
-		// move the file to the destination directory
-       	$destinationFilename = $this->moveUpload($targetFilename);
-       	// parse and validate the binary
-       	$pf = $this->parseAndValidate($contents, $packageFilename);
-       	// load the channel
-       	$channel = TDProject_Channel_Model_Utils_ChannelUtil::getHome($this->getContainer())
-       		->findByPrimaryKey($channelId);
-       	// check if the actual channel matches the package channel
-       	if (!$channel->getName()->equals(new TechDivision_Lang_String($pf->getChannel()))) {
-       		throw new TDProject_Channel_Common_Exceptions_InvalidChannelException(
-       			"Package channel {$pf->getChannel()} doesn't match channel {$channel->getName()}"
-       		);
-       	}
-    	// load the channel package by it's name
-    	$channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
-    		->findByName(new TechDivision_Lang_String($pf->getName()));
-    	// check if channel package is already available
-    	if ($channelPackage == null) {
-    		// if NOT, create a new channel package in the actual channel
-    		$channelPackageId = TDProject_Channel_Model_Actions_ChannelPackage::create($this->getContainer())
-    			->createFromBinary($channelId, $pf);
-    	}
-    	else {
-    		$channelPackageId = $channelPackage->getChannelPackageId();
-    	}
-    	// validate the package maintainers
+        // initialize the archive
+        $tar = $this->extractBinary($targetFilename);
+        // extract the XML content of the package.xml/package2.xml file
+        for ($i = 0; $i < sizeof($this->_metafiles); $i++) {
+            // load the next metafile name
+            $packageFilename = $this->_metafiles[$i];
+            // try to load the content of the binary's metafile
+            if ($contents = $this->extractMetadata($tar, $packageFilename)) {
+                break;
+            }
+        }
+        // parse and validate the binary
+        $pf = $this->parseAndValidate($contents, $packageFilename);
+        // load the channel
+        $channel = TDProject_Channel_Model_Utils_ChannelUtil::getHome($this->getContainer())
+            ->findByPrimaryKey($channelId);
+        // check if the actual channel matches the package channel
+        if (!$channel->getName()->equals(new TechDivision_Lang_String($pf->getChannel()))) {
+            throw new TDProject_Channel_Common_Exceptions_InvalidChannelException(
+                "Package channel {$pf->getChannel()} doesn't match channel {$channel->getName()}"
+            );
+        }
+        // move the file to the destination directory
+        $destinationFilename = $this->moveUpload($targetFilename, $channel);
+        // load the channel package by it's name
+        $channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
+            ->findByName(new TechDivision_Lang_String($pf->getName()));
+        // check if channel package is already available
+        if ($channelPackage == null) {
+            // if NOT, create a new channel package in the actual channel
+            $channelPackageId = TDProject_Channel_Model_Actions_ChannelPackage::create($this->getContainer())
+                ->createFromBinary($channelId, $pf);
+        }
+        else {
+            $channelPackageId = $channelPackage->getChannelPackageId();
+        }
+        // validate the package maintainers
         $this->validateMaintainers($channelPackageId, $pf);
-    	// check if the package has already been uploaded
-    	$release = TDProject_Channel_Model_Utils_ReleaseUtil::getHome($this->getContainer())
-	    	->findByChannelPackageNameAndVersion(
-		    	new TechDivision_Lang_String($pf->getName()),
-		    	new TechDivision_Lang_String($pf->getVersion())
-	    	);
-    	// if a release is already available
-    	if ($release != null) {
-    		// throw an exception
-    		throw new TDProject_Channel_Common_Exceptions_ReleaseAlreadyExistsException(
-    			"Release {$pf->getName()}-{$pf->getVersion()} already exists"
-    		);
-    	}
+        // check if the package has already been uploaded
+        $release = TDProject_Channel_Model_Utils_ReleaseUtil::getHome($this->getContainer())
+            ->findByChannelPackageNameAndVersion(
+                new TechDivision_Lang_String($pf->getName()),
+                new TechDivision_Lang_String($pf->getVersion())
+            );
+        // if a release is already available
+        if ($release != null) {
+            // throw an exception
+            throw new TDProject_Channel_Common_Exceptions_ReleaseAlreadyExistsException(
+                "Release {$pf->getName()}-{$pf->getVersion()} already exists"
+            );
+        }
         // create a new release
         $release = TDProject_Channel_Model_Utils_ReleaseUtil::getHome($this->getContainer())
             ->epbCreate();
@@ -195,14 +195,14 @@ class TDProject_Channel_Model_Actions_Release
         $releaseDate = new Zend_Date($pf->getDate());
         $release->setReleaseDate(new TechDivision_Lang_Integer((int) $releaseDate->getTimestamp()));
         // set the licence URI if available
-       	if (is_array($loc = $pf->getLicenseLocation())) {
-       		if (array_key_exists('uri', $loc)) {
-       			$release->setLicenceUri(new TechDivision_Lang_String($loc['uri']));
-       		}
-       		elseif (array_key_exists('filesource', $loc)) {
-       			$release->setLicenceUri(new TechDivision_Lang_String($loc['filesource']));
-       		}
-       	}
+        if (is_array($loc = $pf->getLicenseLocation())) {
+            if (array_key_exists('uri', $loc)) {
+                $release->setLicenceUri(new TechDivision_Lang_String($loc['uri']));
+            }
+            elseif (array_key_exists('filesource', $loc)) {
+                $release->setLicenceUri(new TechDivision_Lang_String($loc['filesource']));
+            }
+        }
         // save the release and return the ID
         return $release->create();
     }
@@ -211,41 +211,71 @@ class TDProject_Channel_Model_Actions_Release
      * Returns the URL to download the requested filename.
      *
      * @param TechDivision_Lang_Integer $channelId
-     * 		ID of the release's channel
-     * @param TechDivision_Lang_String $filename
-     * 		The filename of the requested releaes
+     *        ID of the release's channel
+     * @param TechDivision_Lang_String  $filename
+     *        The filename of the requested releaes
+     *
+     * @throws TDProject_Channel_Common_Exceptions_UnknownChannelPackageException
+     *
      * @return TechDivision_Lang_String
-     * 		The download URL for the release
-     * @throws TDProject_Channel_Common_Exception_UnknownPackageException
-     * 		Is thrown if package of requested file is not in the actual channel
+     *        The download URL for the release
      */
     public function getDownloadUrl(
-    	TechDivision_Lang_Integer $channelId,
-    	TechDivision_Lang_String $filename)
-    {
-       	// load the channel
-       	$channel = TDProject_Channel_Model_Utils_ChannelUtil::getHome($this->getContainer())
-       		->findByPrimaryKey($channelId);
-       	// load the channel
-       	$channelName = $channel->getName();
-       	// extract the package name from the passed filename
-       	list ($packageName, $version) = explode('-', basename($filename, 'tgz'));
-    	// load the channel package by it's name
-    	$channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
-    		->findByName(new TechDivision_Lang_String($packageName));
-       	// check if the package is part of the passed channel
-       	if (!$channelPackage->getChannelIdFk()->equals($channelId)) {
-       		// if not, throw an exception
-       		throw new TDProject_Channel_Common_Exceptions_UnknownChannelPackageException(
-       			"Package $packageName not available in channel $channelName"
-       		);
-       	}
-    	// load the path to the media directory
-    	$mediaDirectory = $this->_getMediaDirectory();
-    	// prepare and return the download URL
-    	return new TechDivision_Lang_String(
-    		"$mediaDirectory/Channel/get/$filename"
-    	);
+        TechDivision_Lang_Integer $channelId,
+        TechDivision_Lang_String $filename
+    ) {
+        // load the channel
+        $channel = TDProject_Channel_Model_Utils_ChannelUtil::getHome($this->getContainer())
+            ->findByPrimaryKey($channelId);
+        // load the channel name
+        $channelName = $channel->getName();
+        // load the channel alias
+        $channelAlias = $channel->getAlias();
+        // extract the package name from the passed filename
+        list ($packageName, $version) = explode('-', basename($filename, 'tgz'));
+        // load the channel package by it's name
+        $channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
+            ->findByName(new TechDivision_Lang_String($packageName));
+        // check if the package is part of the passed channel
+        if (!$channelPackage->getChannelIdFk()->equals($channelId)) {
+            // if not, throw an exception
+            throw new TDProject_Channel_Common_Exceptions_UnknownChannelPackageException(
+                "Package $packageName not available in channel $channelName"
+            );
+        }
+        // load the path to the media directory
+        $mediaDirectory = $this->_getMediaDirectory();
+
+        /**
+         * Legacy implementation stored all files in one folder, not regarding the channel name.
+         * To allow packages with the same name to be present in more than one channel independently,
+         * the channel name is used as folder in all new release files which have been uploaded
+         * after the change.
+         *
+         * Unless explicitly migrated, all previously existing release files stay untouched,
+         * so for those a fallback logic exists.
+         */
+        try {
+            // First try to locate the release file in the correct folder of the channel.
+            $filePath = new TechDivision_Lang_String(
+                "$mediaDirectory/Channel/get/$channelAlias/$filename"
+            );
+
+            // Throw an exception if the file does not exist in the channel-specific folder.
+            if (!file_exists($filePath->toString())) {
+                throw new TDProject_Channel_Common_Exceptions_ReleaseFileNotFoundException(
+                    sprintf('File "%s" does not exist.', $filePath->toString())
+                );
+            }
+        } catch (TDProject_Channel_Common_Exceptions_ReleaseFileNotFoundException $e) {
+            // Legacy fallback. try to locate the file in the flat structure without channel name.
+            $filePath = new TechDivision_Lang_String(
+                "$mediaDirectory/Channel/get/$filename"
+            );
+        }
+
+        // Return the prepared download URL.
+        return $filePath;
     }
 
     /**
@@ -295,29 +325,39 @@ class TDProject_Channel_Model_Actions_Release
     /**
      * Moves the binary to the target folder.
      *
-     * @param TechDivision_Lang_String $targetFilename
-     * 		The binary to move
-     * @return string The destination file the file has been moved to
+     * @param TechDivision_Lang_String                 $targetFilename
+     *        The binary to move
+     * @param TDProject_Channel_Model_Entities_Channel $channel
+     *
      * @throws TDProject_Channel_Common_Exceptions_ReleaseMoveException
-     * 		Is thrown if package can't be moved to media folder
+     * @return string The destination file the file has been moved to
      */
     public function moveUpload(
-    	TechDivision_Lang_String $targetFilename)
+        TechDivision_Lang_String $targetFilename,
+        TDProject_Channel_Model_Entities_Channel $channel)
     {
-    	// load the path to the media directory
-    	$mediaDirectory = $this->_getMediaDirectory();
-    	// load the filename from the target
-    	$filename = basename($oldname = $targetFilename->stringValue());
-    	// prepare the destination
-    	$newname = "$mediaDirectory/Channel/get/$filename";
-    	// move the uploaded file to the destination directory
-    	if (!rename($oldname, $newname)) {
-    		throw new TDProject_Channel_Common_Exceptions_ReleaseMoveException(
-    			"Binary '$oldname' can't be moved to destination '$newname'"
-    		);
-    	}
-    	// return the new filename
-    	return $newname;
+        // load the path to the media directory
+        $mediaDirectory = $this->_getMediaDirectory();
+        // load the filename from the target
+        $filename = basename($oldname = $targetFilename->stringValue());
+        // build the base directory including the channel name
+        $baseDir = sprintf('%s/Channel/get/%s/', $mediaDirectory, $channel->getAlias());
+
+        // try to create the channel-specific directory
+        if (!is_dir($baseDir)) {
+            mkdir($baseDir, 0777);
+        }
+
+        // prepare the destination
+        $newname = "$baseDir/$filename";
+        // move the uploaded file to the destination directory
+        if (!rename($oldname, $newname)) {
+            throw new TDProject_Channel_Common_Exceptions_ReleaseMoveException(
+                "Binary '$oldname' can't be moved to destination '$newname'"
+            );
+        }
+        // return the new filename
+        return $newname;
     }
 
     /**
