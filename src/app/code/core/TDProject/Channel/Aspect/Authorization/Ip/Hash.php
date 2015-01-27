@@ -69,7 +69,8 @@ class TDProject_Channel_Aspect_Authorization_Ip_Hash
 	        return $this->_getDelegate()
 	            ->allowReleaseUpload(
 	                new TechDivision_Lang_String($filename),
-	                new TechDivision_Lang_String($hash)
+	                new TechDivision_Lang_String($hash),
+                    $channelId
 	            );
         }
         catch(Exception $e) {

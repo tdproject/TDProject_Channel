@@ -550,21 +550,22 @@ class TDProject_Channel_Model_Services_DomainProcessor
      * @see TDProject/Channel/Common/Delegates/Interfaces/DomainProcessorDelegate#allowReleaseUpload(TechDivision_Lang_String $filename, TechDivision_Lang_String $hash)
      */
     public function allowReleaseUpload(
-    	TechDivision_Lang_String $filename,
-    	TechDivision_Lang_String $hash)
+        TechDivision_Lang_String $filename,
+        TechDivision_Lang_String $hash,
+        TechDivision_Lang_Integer $channelIdFk)
     {
-    	try {
-    		// check if release upload is allowed
-    		return TDProject_Channel_Model_Actions_Release::create($this->getContainer())
-    			->allowReleaseUpload($filename, $hash);
-    	}
-    	catch(TechDivision_Model_Interfaces_Exception $e) {
-    		// log the exception message
-    		$this->_getLogger()->error($e->__toString());
-    		// throw a new exception
-    		throw new TDProject_Core_Common_Exceptions_SystemException(
-    			$e->__toString()
-    		);
-    	}
+        try {
+            // check if release upload is allowed
+            return TDProject_Channel_Model_Actions_Release::create($this->getContainer())
+                ->allowReleaseUpload($filename, $hash, $channelIdFk);
+        }
+        catch(TechDivision_Model_Interfaces_Exception $e) {
+            // log the exception message
+            $this->_getLogger()->error($e->__toString());
+            // throw a new exception
+            throw new TDProject_Core_Common_Exceptions_SystemException(
+                $e->__toString()
+            );
+        }
     }
 }

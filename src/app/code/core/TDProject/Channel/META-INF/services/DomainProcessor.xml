@@ -234,6 +234,9 @@
                 <param name="hash" type="TechDivision_Lang_String">
                     <description><![CDATA[The API-Hash of the user who wants to upload the file with the passed name]]></description>
                 </param>
+                <param name="channelIdFk" type="TechDivision_Lang_Integer">
+                    <description><![CDATA[The foreign key of the channel containing the package]]></description>
+                </param>
             </params>
             <return type="boolean">
                 <description><![CDATA[TRUE if the upload is allowed, else FALSE.]]></description>

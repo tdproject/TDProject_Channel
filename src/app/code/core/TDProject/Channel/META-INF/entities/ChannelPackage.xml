@@ -38,6 +38,17 @@
             <result-type>Storable</result-type>
             <sql>SELECT channel_package_id FROM channel_package WHERE name = ?</sql>
         </query>
+        <query>
+            <description><![CDATA[Returns the channel package with the passed name.]]></description>
+            <method name="findByNameAndChannelIdFk">
+                <params>
+                    <param name="name" type="String"/>
+                    <param name="channelIdFk" type="Integer"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT channel_package_id FROM channel_package WHERE name = ? AND channel_id_fk = ?</sql>
+        </query>
 		<query>
 			<description><![CDATA[Returns all channel packages.]]></description>
 			<method name="findAll">

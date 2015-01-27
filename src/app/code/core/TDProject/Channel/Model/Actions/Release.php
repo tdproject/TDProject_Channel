@@ -43,69 +43,74 @@ class TDProject_Channel_Model_Actions_Release
         return new TDProject_Channel_Model_Actions_Release($container);
     }
 
+
     /**
      * Checks if the maintainer with the passed API-Hash is
      * allowed to upload the file with the passed name.
      *
-     * @param TechDivision_Lang_String $filename
-     * 		The name of the file to be uploaded
-     * @param TechDivision_Lang_String $hash
-     * 		The API-Hash of the maintainer who tries to upload the file
+     * @param TechDivision_Lang_String  $filename
+     *        The name of the file to be uploaded
+     * @param TechDivision_Lang_String  $hash
+     *        The API-Hash of the maintainer who tries to upload the file
+     * @param TechDivision_Lang_Integer $channelIdFk
+     *        The Channel ID foreign key of the channel containing the package
+     *
      * @return boolean TRUE if the upload is allowed, else FALSE
      * @throws TDProject_Channel_Common_Exceptions_InvalidApiHashException
-     * 		Is thrown if the an unknown API-Hash has been passed
+     *        Is thrown if the an unknown API-Hash has been passed
      * @throws TDProject_Channel_Common_Exceptions_InvalidRoleException
-     * 		Is thrown if the user with the passed API-Hash has not role 'lead'
+     *        Is thrown if the user with the passed API-Hash has not role 'lead'
      * @throws TDProject_Channel_Common_Exceptions_UnknownPackageException
-     * 		Is thrown if the passed API-Hash is not related with the passed package
+     *        Is thrown if the passed API-Hash is not related with the passed package
      */
     public function allowReleaseUpload(
-    	TechDivision_Lang_String $filename,
-    	TechDivision_Lang_String $hash)
-    {
-    	// try to load the maintainer by the passed API-Hash
-    	$maintainer = TDProject_Channel_Model_Utils_MaintainerUtil::getHome($this->getContainer())
-    		->findByHash($hash);
-    	// check if a maintainer with the passed API-Hash is available
-    	if ($maintainer == null) {
-    		throw new TDProject_Channel_Common_Exceptions_InvalidApiHashException(
-    			"Invalid hash '$hash' passed for authentication"
-    		);
-    	}
-    	// initialize the maintainer lead role Enum to compare the maintainer role with
-    	$lead = TDProject_Channel_Common_Enums_MaintainerRole::create(
-    		TDProject_Channel_Common_Enums_MaintainerRole::LEAD
-    	);
-    	// check if the maintainer is 'active'
-    	if ($maintainer->getActive()->equals(new TechDivision_Lang_Boolean(false))) {
-    		throw new TDProject_Channel_Common_Exceptions_InvalidRoleException(
-    			"Maintainer MUST be active"
-    		);
-    	}
-    	// compare the roles maintainer MUST have role 'lead'
-    	if (!$maintainer->getRole()->equals($lead->toString())) {
-    		throw new TDProject_Channel_Common_Exceptions_InvalidRoleException(
-    			"Maintainer MUST have role '$lead'"
-    		);
-    	}
-    	// explode the channel package name
-    	list ($packageName, $version) = explode('-', basename($filename, "tgz"));
-    	// try load the channel package by it's name
-    	$channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
-    		->findByName(new TechDivision_Lang_String($packageName));
-    	// check if channel package is available
-    	if ($channelPackage == null) {
-    		throw new TDProject_Channel_Common_Exceptions_UnknownChannelPackageException(
-    			"Unknown package '{$pf->getName()}'"
-    		);
-    	}
-    	// check if the API-Hash is valid for the uploaded channel package
-    	if (!$channelPackage->getChannelPackageId()->equals($maintainer->getChannelPackageIdFk())) {
-    		throw new TDProject_Channel_Common_Exceptions_InvalidApiHashException(
-    			"Hash '$hash' is not valid for package '{$channelPackage->getName()}'"
-    		);
-    	}
-    	// return TRUE if the 
+        TechDivision_Lang_String $filename,
+        TechDivision_Lang_String $hash,
+        TechDivision_Lang_Integer $channelIdFk
+    ) {
+        // try to load the maintainer by the passed API-Hash
+        $maintainer = TDProject_Channel_Model_Utils_MaintainerUtil::getHome($this->getContainer())
+            ->findByHash($hash);
+        // check if a maintainer with the passed API-Hash is available
+        if ($maintainer == null) {
+            throw new TDProject_Channel_Common_Exceptions_InvalidApiHashException(
+                "Invalid hash '$hash' passed for authentication"
+            );
+        }
+        // initialize the maintainer lead role Enum to compare the maintainer role with
+        $lead = TDProject_Channel_Common_Enums_MaintainerRole::create(
+            TDProject_Channel_Common_Enums_MaintainerRole::LEAD
+        );
+        // check if the maintainer is 'active'
+        if ($maintainer->getActive()->equals(new TechDivision_Lang_Boolean(false))) {
+            throw new TDProject_Channel_Common_Exceptions_InvalidRoleException(
+                "Maintainer MUST be active"
+            );
+        }
+        // compare the roles maintainer MUST have role 'lead'
+        if (!$maintainer->getRole()->equals($lead->toString())) {
+            throw new TDProject_Channel_Common_Exceptions_InvalidRoleException(
+                "Maintainer MUST have role '$lead'"
+            );
+        }
+        // explode the channel package name
+        list ($packageName, $version) = explode('-', basename($filename, "tgz"));
+        // try load the channel package by it's name
+        $channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
+            ->findByNameAndChannelIdFk(new TechDivision_Lang_String($packageName), $channelIdFk);
+        // check if channel package is available
+        if ($channelPackage == null) {
+            throw new TDProject_Channel_Common_Exceptions_UnknownChannelPackageException(
+                "Unknown package '{$channelPackage->getName()}'"
+            );
+        }
+        // check if the API-Hash is valid for the uploaded channel package
+        if (!$channelPackage->getChannelPackageId()->equals($maintainer->getChannelPackageIdFk())) {
+            throw new TDProject_Channel_Common_Exceptions_InvalidApiHashException(
+                "Hash '$hash' is not valid for package '{$channelPackage->getName()}'"
+            );
+        }
+        // return TRUE if the
         return true;
     }
 
