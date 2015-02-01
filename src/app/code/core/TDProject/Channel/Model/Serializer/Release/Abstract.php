@@ -23,29 +23,29 @@ abstract class TDProject_Channel_Model_Serializer_Release_Abstract
     extends TDProject_Channel_Model_Serializer_Abstract
 {
 
-	/**
-	 * Holds the PCRE variable expression for the package name.
-	 * @var string
-	 */
-	const PACKAGE_NAME = 'packageName';
+    /**
+     * Holds the PCRE variable expression for the package name.
+     * @var string
+     */
+    const PACKAGE_NAME = 'packageName';
 
-	/**
-	 * Holds the PCRE variable expression for the version.
-	 * @var string
-	 */
-	const VERSION = 'version';
+    /**
+     * Holds the PCRE variable expression for the version.
+     * @var string
+     */
+    const VERSION = 'version';
 
-	/**
-	 * Holds the PCRE variable expression for the stability.
-	 * @var string
-	 */
-	const STABILITY = 'stability';
+    /**
+     * Holds the PCRE variable expression for the stability.
+     * @var string
+     */
+    const STABILITY = 'stability';
 
-	/**
-	 * Holds the PCRE variable expression for the build number.
-	 * @var string
-	 */
-	const BUILD = 'build';
+    /**
+     * Holds the PCRE variable expression for the build number.
+     * @var string
+     */
+    const BUILD = 'build';
 
     /**
      * REST namespace for ressource with the releases list.
@@ -88,24 +88,25 @@ abstract class TDProject_Channel_Model_Serializer_Release_Abstract
      * @return void
      */
     public function getChannelPackageByName(
-    	TDProject_Channel_Model_Assembler_Channel_Api $assembler)
+        TDProject_Channel_Model_Assembler_Channel_Api $assembler)
     {
-    	// load the requested resource URI
-    	$resourceUri = $assembler->getResourceUri()->stringValue();
-		// check if the serializers regex matches the resource URI
-    	if (preg_match($this->getRegex(), $resourceUri, $params)) {
-			// if yes, check if a package name is available
-			if (array_key_exists(self::PACKAGE_NAME, $params)) {
-				// load the package name
-				$packageName = $params[self::PACKAGE_NAME];
-				// set the package for the package name in the resource URI
-				$this->setChannelPackage(
-				    $assembler->getChannelPackageByName(
-					    new TechDivision_Lang_String($packageName)
-				    )
-				);
-			}
-    	}
+        // load the requested resource URI
+        $resourceUri = $assembler->getResourceUri()->stringValue();
+        // check if the serializers regex matches the resource URI
+        if (preg_match($this->getRegex(), $resourceUri, $params)) {
+            // if yes, check if a package name is available
+            if (array_key_exists(self::PACKAGE_NAME, $params)) {
+                // load the package name
+                $packageName = $params[self::PACKAGE_NAME];
+                // set the package for the package name in the resource URI
+                $this->setChannelPackage(
+                    $assembler->getChannelPackageByNameAndChannelIdFk(
+                        new TechDivision_Lang_String($packageName),
+                        $assembler->getChannel()->getChannelId()
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -116,29 +117,30 @@ abstract class TDProject_Channel_Model_Serializer_Release_Abstract
      * @return void
      */
     public function getReleaseByChannelPackageNameAndVersion(
-    	TDProject_Channel_Model_Assembler_Channel_Api $assembler)
+        TDProject_Channel_Model_Assembler_Channel_Api $assembler)
     {
-    	// load the requested resource URI
-    	$resourceUri = $assembler->getResourceUri()->stringValue();
-		// check if the serializers regex matches the resource URI
-    	if (preg_match($this->getRegex(), $resourceUri, $params)) {
-			// if yes, check if a package name is available
-			if (array_key_exists(self::PACKAGE_NAME, $params) &&
-			    array_key_exists(self::VERSION, $params)) {
-				// load the package name/version
-				$packageName = $params[self::PACKAGE_NAME];
-				$version = $params[self::VERSION];
-				$stability = $params[self::STABILITY];
-				$build = $params[self::BUILD];
-				// set the package for the package name/version in the resource URI
-				$this->setRelease(
-				    $assembler->getReleaseByChannelPackageNameAndVersion(
-					    new TechDivision_Lang_String($packageName),
-					    new TechDivision_Lang_String($version . $stability . $build)
-				    )
-				);
-			}
-    	}
+        // load the requested resource URI
+        $resourceUri = $assembler->getResourceUri()->stringValue();
+        // check if the serializers regex matches the resource URI
+        if (preg_match($this->getRegex(), $resourceUri, $params)) {
+            // if yes, check if a package name is available
+            if (array_key_exists(self::PACKAGE_NAME, $params) &&
+                array_key_exists(self::VERSION, $params)) {
+                // load the package name/version
+                $packageName = $params[self::PACKAGE_NAME];
+                $version = $params[self::VERSION];
+                $stability = $params[self::STABILITY];
+                $build = $params[self::BUILD];
+                // set the package for the package name/version in the resource URI
+                $this->setRelease(
+                    $assembler->getReleaseByChannelPackageNameAndVersionAndChannelIdFk(
+                        new TechDivision_Lang_String($packageName),
+                        new TechDivision_Lang_String($version . $stability . $build),
+                        $assembler->getChannel()->getChannelId()
+                    )
+                );
+            }
+        }
     }
 
     /**
@@ -187,7 +189,7 @@ abstract class TDProject_Channel_Model_Serializer_Release_Abstract
     /**
      * Returns the channel package instance.
      *
-     * @return TDProject_Channel_Model_Entities_ChannelPackage 
+     * @return TDProject_Channel_Model_Entities_ChannelPackage
      * 		The channel package instance
      */
     public function getChannelPackage()

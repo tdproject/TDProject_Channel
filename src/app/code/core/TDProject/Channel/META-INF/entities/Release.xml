@@ -70,6 +70,18 @@
             <result-type>Storable</result-type>
             <sql>SELECT t1.`release_id` FROM `release` t1, `channel_package` t2 WHERE t2.`name` = ? AND t1.`channel_package_id_fk` = t2.`channel_package_id` AND t1.`version` = ?</sql>
         </query>
+        <query>
+            <description><![CDATA[Returns the release for the passed package name, version and channel id.]]></description>
+            <method name="findByChannelPackageNameAndVersionAndChannelIdFk">
+                <params>
+                    <param name="channelPackageName" type="String"/>
+                    <param name="version" type="String"/>
+                    <param name="channelIdFk" type="Int"/>
+                </params>
+            </method>
+            <result-type>Storable</result-type>
+            <sql>SELECT t1.`release_id` FROM `release` t1, `channel_package` t2 WHERE t2.`name` = ? AND t1.`channel_package_id_fk` = t2.`channel_package_id` AND t1.`version` = ? AND t2.`channel_id_fk` = ?</sql>
+        </query>
 	</querys>
 	<references>
         <reference name="release-has-channel-package">

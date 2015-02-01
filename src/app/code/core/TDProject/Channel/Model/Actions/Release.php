@@ -25,11 +25,11 @@ require_once 'PEAR/PackageFile/Parser/v2.php';
 class TDProject_Channel_Model_Actions_Release
     extends TDProject_Core_Model_Actions_Abstract {
 
-	/**
-	 * Allowed metafile names.
-	 * @var array
-	 */
-	protected $_metafiles = array('package.xml', 'package2.xml');
+    /**
+     * Allowed metafile names.
+     * @var array
+     */
+    protected $_metafiles = array('package.xml', 'package2.xml');
 
     /**
      * Factory method to create a new instance.
@@ -157,7 +157,7 @@ class TDProject_Channel_Model_Actions_Release
         $destinationFilename = $this->moveUpload($targetFilename, $channel);
         // load the channel package by it's name
         $channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
-            ->findByName(new TechDivision_Lang_String($pf->getName()));
+            ->findByNameAndChannelIdFk(new TechDivision_Lang_String($pf->getName()), $channelId);
         // check if channel package is already available
         if ($channelPackage == null) {
             // if NOT, create a new channel package in the actual channel
@@ -171,15 +171,16 @@ class TDProject_Channel_Model_Actions_Release
         $this->validateMaintainers($channelPackageId, $pf);
         // check if the package has already been uploaded
         $release = TDProject_Channel_Model_Utils_ReleaseUtil::getHome($this->getContainer())
-            ->findByChannelPackageNameAndVersion(
+            ->findByChannelPackageNameAndVersionAndChannelIdFk(
                 new TechDivision_Lang_String($pf->getName()),
-                new TechDivision_Lang_String($pf->getVersion())
+                new TechDivision_Lang_String($pf->getVersion()),
+                $channelId
             );
         // if a release is already available
         if ($release != null) {
             // throw an exception
             throw new TDProject_Channel_Common_Exceptions_ReleaseAlreadyExistsException(
-                "Release {$pf->getName()}-{$pf->getVersion()} already exists"
+                "Release {$pf->getChannel()}/{$pf->getName()}-{$pf->getVersion()} already exists"
             );
         }
         // create a new release
@@ -322,7 +323,7 @@ class TDProject_Channel_Model_Actions_Release
             $identifier = implode(', ', $mnt);
             // throw an exception that the maintainer is NOT related with the package
             throw new TDProject_Channel_Common_Exceptions_MaintainerNotRelatedException(
-            	"Maintainer $identifier not matches channel configuration"
+                "Maintainer $identifier not matches channel configuration"
             );
         }
     }
@@ -373,7 +374,7 @@ class TDProject_Channel_Model_Actions_Release
      */
     public function extractBinary(TechDivision_Lang_String $targetFilename)
     {
-    	return new Archive_Tar($targetFilename->stringValue());
+        return new Archive_Tar($targetFilename->stringValue());
     }
 
     /**
@@ -385,7 +386,7 @@ class TDProject_Channel_Model_Actions_Release
      */
     public function extractMetadata(Archive_Tar $tar, $packageFilename)
     {
-    	return $tar->extractInString($packageFilename);
+        return $tar->extractInString($packageFilename);
     }
 
     /**
@@ -399,47 +400,47 @@ class TDProject_Channel_Model_Actions_Release
      * @throws TDProject_Channel_Common_Exceptions_ChannelPackageParseException
      * 		Is thrown if the package.xml or package2.xml could not be parsed
      */
-	public function parseAndValidate($contents, $packageFilename)
-	{
-		// initialize the parser for the package file and parse it
-		$pkg = new PEAR_PackageFile_Parser_v2();
-		$pkg->setConfig(new PEAR_Config());
-		$pf = $pkg->parse($contents, $packageFilename);
-		// check if errors occurs and throw an exception if necessary
-		if (PEAR::isError($pf)) {
-			throw new TDProject_Channel_Common_Exceptions_ChannelPackageParseException(
-				$pf->getMessage()
-			);
-		}
-    	// return the package file
-    	return $pf;
+    public function parseAndValidate($contents, $packageFilename)
+    {
+        // initialize the parser for the package file and parse it
+        $pkg = new PEAR_PackageFile_Parser_v2();
+        $pkg->setConfig(new PEAR_Config());
+        $pf = $pkg->parse($contents, $packageFilename);
+        // check if errors occurs and throw an exception if necessary
+        if (PEAR::isError($pf)) {
+            throw new TDProject_Channel_Common_Exceptions_ChannelPackageParseException(
+                $pf->getMessage()
+            );
+        }
+        // return the package file
+        return $pf;
     }
-    
+
     /**
      * Returns the PEAR system configuration instance.
-     * 
+     *
      * @return PEAR_Config The PEAR system configuration
      */
     public function getSystemConfig()
     {
-    	return $this->getContainer()->getSystemConfig();
+        return $this->getContainer()->getSystemConfig();
     }
 
-	/**
-	 * Loads the media directory from the system settings.
-	 *
-	 * @return string The path to the media directory
-	 */
-	protected function _getMediaDirectory()
-	{
-		// load the data directory
-		$dataDir = $this->getSystemConfig()->get('data_dir');
-		// initialize a new LocalHome to load the settings
-		$settings = TDProject_Core_Model_Utils_SettingUtil::getHome($this->getContainer())
-			->findAll();
-		// return the directory for storing media data
-		foreach ($settings as $setting) {
-			return  $dataDir . DIRECTORY_SEPARATOR .  $setting->getMediaDirectory();
-		}
-	}
+    /**
+     * Loads the media directory from the system settings.
+     *
+     * @return string The path to the media directory
+     */
+    protected function _getMediaDirectory()
+    {
+        // load the data directory
+        $dataDir = $this->getSystemConfig()->get('data_dir');
+        // initialize a new LocalHome to load the settings
+        $settings = TDProject_Core_Model_Utils_SettingUtil::getHome($this->getContainer())
+            ->findAll();
+        // return the directory for storing media data
+        foreach ($settings as $setting) {
+            return  $dataDir . DIRECTORY_SEPARATOR .  $setting->getMediaDirectory();
+        }
+    }
 }

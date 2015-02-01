@@ -21,7 +21,7 @@
         <api>${api.stability}</api>
     </stability>
     <license uri="http://www.gnu.org/licenses/gpl-2.0.html">GPL, version 2.0</license>
-    <notes>Bugfix for multiple packages of the same name in different channels</notes>
+    <notes>Additional bugfixes for multiple packages with the same name</notes>
     <dependencies>
         <required>
             <php>
@@ -61,6 +61,21 @@
     <phprelease/>
     <changelog>
 		<release xmlns="">
+                    <version>
+                        <release>0.1.53</release>
+                        <api>0.1.0</api>
+                    </version>
+                    <stability>
+                        <release>beta</release>
+                        <api>beta</api>
+                    </stability>
+                    <date>2015-02-01</date>
+                    <license uri="http://www.gnu.org/licenses/gpl-2.0.html">GPL, version 2.0</license>
+                    <notes>
+                        Additional bugfixes for multiple packages with the same name
+                    </notes>
+                </release>
+<release xmlns="">
                     <version>
                         <release>0.1.52</release>
                         <api>0.1.0</api>

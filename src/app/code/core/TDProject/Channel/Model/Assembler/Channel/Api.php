@@ -297,6 +297,24 @@ class TDProject_Channel_Model_Assembler_Channel_Api
     }
 
     /**
+     * Returns the channel package by the unique channel package name.
+     *
+     * @param TechDivision_Lang_String $name
+     * 		The name of the requested channel package
+     * @param TechDivision_Lang_Integer $channelIdFk
+     *      The foreign key of the channel containing the package
+     * @return TDProject_Channel_Model_Entities_ChannelPackage
+     * 		The requested channel package
+     */
+    public function getChannelPackageByNameAndChannelIdFk(
+        TechDivision_Lang_String $name,
+        TechDivision_Lang_Integer $channelIdFk
+    ) {
+        return TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
+            ->findByNameAndChannelIdFk($name, $channelIdFk);
+    }
+
+    /**
      * Returns the user with the passed ID.
      *
      * @param TechDivision_Lang_Integer $userId The ID of the user to return
@@ -350,6 +368,28 @@ class TDProject_Channel_Model_Assembler_Channel_Api
         // load the package release
         return TDProject_Channel_Model_Utils_ReleaseUtil::getHome($this->getContainer())
             ->findByChannelPackageNameAndVersion($packageName, $version);
+    }
+
+    /**
+     * Returns the release for the passed channel package name and version.
+     *
+     * @param TechDivision_Lang_String $packageName
+     * 		The package name to return the release for
+     * @param TechDivision_Lang_String $version
+     * 		The version to return the release for
+     * @param TechDivision_Lang_Integer $channelIdFk
+     *      The foreign key of the channel containing the package
+     * @return TDProject_Channel_Model_Entities_Release
+     * 		The release
+     */
+    public function getReleaseByChannelPackageNameAndVersionAndChannelIdFk(
+        TechDivision_Lang_String $packageName,
+        TechDivision_Lang_String $version,
+        TechDivision_Lang_Integer $channelIdFk
+    ) {
+        // load the package release
+        return TDProject_Channel_Model_Utils_ReleaseUtil::getHome($this->getContainer())
+            ->findByChannelPackageNameAndVersionAndChannelIdFk($packageName, $version, $channelIdFk);
     }
 
 	/**
