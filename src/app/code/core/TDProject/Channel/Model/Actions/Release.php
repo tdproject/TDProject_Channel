@@ -241,7 +241,7 @@ class TDProject_Channel_Model_Actions_Release
         list ($packageName, $version) = explode('-', basename($filename, 'tgz'));
         // load the channel package by it's name
         $channelPackage = TDProject_Channel_Model_Utils_ChannelPackageUtil::getHome($this->getContainer())
-            ->findByName(new TechDivision_Lang_String($packageName));
+            ->findByNameAndChannelIdFk(new TechDivision_Lang_String($packageName), $channelId);
         // check if the package is part of the passed channel
         if (!$channelPackage->getChannelIdFk()->equals($channelId)) {
             // if not, throw an exception
